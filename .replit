@@ -1,0 +1,9 @@
+[nix]
+channel = "stable-22_11"
+
+[deployment]
+run = ["sh", "-c", "npm start"]
+
+[[ports]]
+localPort = 4000
+externalPort = 80

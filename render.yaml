@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: modernstore-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: rondom#secret
+      - key: MONGODB_URI
+        value: mongodb+srv://moshaheen616_db_user:123456@cluster0.xhgf2xx.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0
