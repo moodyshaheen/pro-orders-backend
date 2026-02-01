@@ -2,39 +2,40 @@ import mongoose from "mongoose";
 
 export const connectDb = async () => {
    try {
-      const mongoUri = process.env.MONGODB_URI || "mongodb+srv://moshaheen616_db_user:123456@cluster0.xhgf2xx.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0";
+      // Get MongoDB URI from environment variables
+      const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
-      console.log("🔄 Attempting to connect to MongoDB...");
-      console.log("📍 Connection URI:", mongoUri.replace(/\/\/.*@/, '//***:***@')); // Hide credentials in logs
-
-      // Modern connection options (no deprecated options)
-      const options = {
-         serverSelectionTimeoutMS: 10000, // Increase timeout for Atlas
-         socketTimeoutMS: 45000,
-      };
-
-      await mongoose.connect(mongoUri, options);
-
-      if (mongoUri.includes('localhost')) {
-         console.log("✅ Database Connected Successfully to Local MongoDB");
-      } else {
-         console.log("✅ Database Connected Successfully to MongoDB Atlas");
+      if (!mongoUri) {
+         console.log("⚠️ No MongoDB URI found in environment variables");
+         console.log("🔧 Using fallback connection string");
+         // Fallback connection string
+         const fallbackUri = "mongodb+srv://moshaheen616_db_user:123456@cluster0.xhgf2xx.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0";
+         await connectWithUri(fallbackUri);
+         return;
       }
+
+      await connectWithUri(mongoUri);
    } catch (error) {
       console.error("❌ Database connection failed:", error.message);
-
-      if (error.message.includes('authentication failed')) {
-         console.log("🔑 Authentication Error: Please check your MongoDB username and password");
-      } else if (error.message.includes('ENOTFOUND')) {
-         console.log("🌐 DNS Error: Please check your cluster URL or internet connection");
-      } else if (error.message.includes('ECONNREFUSED')) {
-         console.log("🔌 Connection Refused: MongoDB is not running locally");
-         console.log("💡 To install MongoDB locally:");
-         console.log("   1. Download from: https://www.mongodb.com/try/download/community");
-         console.log("   2. Or use MongoDB Atlas (cloud) by updating MONGODB_URI in .env");
-      }
-
-      console.log("⚠️  Server will continue running with temporary storage");
-      console.log("🔧 Products will be saved in memory until database connects");
+      console.log("⚠️ Server will continue running with temporary storage");
    }
-}
+};
+
+const connectWithUri = async (uri) => {
+   console.log("🔄 Attempting to connect to MongoDB...");
+   console.log("📍 Connection URI:", uri.replace(/\/\/.*@/, '//***:***@')); // Hide credentials in logs
+
+   // Modern connection options
+   const options = {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+   };
+
+   await mongoose.connect(uri, options);
+
+   if (uri.includes('localhost')) {
+      console.log("✅ Database Connected Successfully to Local MongoDB");
+   } else {
+      console.log("✅ Database Connected Successfully to MongoDB Atlas");
+   }
+};

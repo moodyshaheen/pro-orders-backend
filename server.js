@@ -4,6 +4,14 @@ import { connectDb } from "./config/db.js"
 import proRouter from "./routes/routePro.js"
 import userRouter from "./routes/routeUser.js"
 import 'dotenv/config'
+
+// Debug environment variables
+console.log("🔍 Environment Variables Check:");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("PORT:", process.env.PORT);
+console.log("JWT_SECRET:", process.env.JWT_SECRET ? "✅ Set" : "❌ Missing");
+console.log("MONGODB_URI:", process.env.MONGODB_URI ? "✅ Set" : "❌ Missing");
+console.log("MONGO_URI:", process.env.MONGO_URI ? "✅ Set" : "❌ Missing");
 import cartRoute from "./routes/routeCart.js"
 import orderRoute from "./routes/routeOrder.js"
 import { seedDatabase } from "./seedData.js"
