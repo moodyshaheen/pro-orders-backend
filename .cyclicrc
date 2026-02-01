@@ -1,0 +1,7 @@
+{
+  "memory": 512,
+  "timeout": 30,
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
